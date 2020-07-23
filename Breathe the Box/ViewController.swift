@@ -20,6 +20,66 @@ class ViewController: UIViewController {
     @IBOutlet weak var bottomBarView: UIView!
     @IBOutlet weak var leftBarView: UIView!
     
+    let fillTime = 4.0
+    let fadeTime = 1.0
+    
+    lazy var fillTopAnimator = {
+        UIViewPropertyAnimator(duration: self.fillTime, curve: .linear) { [unowned self] in
+            self.fillTopBarWidthConstraint.constant = 150
+            self.view.layoutIfNeeded()
+        }
+    }()
+    
+    lazy var fillRightAnimator = {
+        UIViewPropertyAnimator(duration: self.fillTime, curve: .linear) { [unowned self] in
+            self.fillRightBarWidthConstraint.constant = 150
+            self.view.layoutIfNeeded()
+        }
+    }()
+    
+    lazy var fillBottomAnimator = {
+        UIViewPropertyAnimator(duration: self.fillTime, curve: .linear) { [unowned self] in
+            self.fillBottomBarWidthConstraint.constant = 150
+            self.view.layoutIfNeeded()
+        }
+    }()
+    
+    lazy var fillLeftAnimator = {
+        UIViewPropertyAnimator(duration: self.fillTime, curve: .linear) { [unowned self] in
+            self.fillLeftBarWidthConstraint.constant = 150
+            self.view.layoutIfNeeded()
+        }
+    }()
+    
+    lazy var fadeTopAnimation = {
+        UIViewPropertyAnimator(duration: self.fadeTime, curve: .linear) { [unowned self] in
+            self.topBarView.backgroundColor = .white
+            self.view.layoutIfNeeded()
+        }
+    }()
+    
+    lazy var fadeRightAnimation = {
+        UIViewPropertyAnimator(duration: self.fadeTime, curve: .linear) { [unowned self] in
+            self.rightBarView.backgroundColor = .white
+            self.view.layoutIfNeeded()
+        }
+    }()
+    
+    lazy var fadeBottomAnimation = {
+        UIViewPropertyAnimator(duration: self.fadeTime, curve: .linear) { [unowned self] in
+            self.bottomBarView.backgroundColor = .white
+            self.view.layoutIfNeeded()
+        }
+    }()
+    
+    lazy var fadeLeftAnimation = {
+        UIViewPropertyAnimator(duration: self.fadeTime, curve: .linear) { [unowned self] in
+            self.leftBarView.backgroundColor = .white
+            self.view.layoutIfNeeded()
+        }
+    }()
+    
+    
     func reset() {
         if fillTopBarWidthConstraint.constant == 150 {
             fillTopBarWidthConstraint.constant = 0
@@ -57,11 +117,78 @@ class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        let fill = [fillTopBarWidthConstraint, fillRightBarWidthConstraint, fillBottomBarWidthConstraint, fillLeftBarWidthConstraint]
+//        let fill = [fillTopBarWidthConstraint, fillRightBarWidthConstraint, fillBottomBarWidthConstraint, fillLeftBarWidthConstraint]
+//
+//        let bars = [topBarView, rightBarView, bottomBarView, leftBarView]
+//
+//        newbox(bars: bars, fill: fill, index: 0, fillDur: 4, fadeDur: 1)
+        
+        self.fillTopAnimator.addCompletion { [unowned self] _ in
+            print("Filled top")
+            self.fadeTopAnimation.startAnimation()
+            self.fillRightAnimator.startAnimation()
+            self.view.layoutIfNeeded()
+        }
+        
+        self.fadeTopAnimation.addCompletion { [unowned self] _ in
+            print("Faded top")
+            self.fillTopBarWidthConstraint.constant = 0
+            self.topBarView.backgroundColor = .systemTeal
+            self.view.layoutIfNeeded()
+        }
+        
+        self.fillRightAnimator.addCompletion { [unowned self] _ in
+            print("Filled Right")
+            self.fadeRightAnimation.startAnimation()
+            self.fillBottomAnimator.startAnimation()
+            self.view.layoutIfNeeded()
+        }
+        
+        self.fadeRightAnimation.addCompletion { [unowned self] _ in
+            print("Faded right")
+            self.fillRightBarWidthConstraint.constant = 0
+            self.rightBarView.backgroundColor = .systemTeal
+            self.view.layoutIfNeeded()
+        }
+        
+        self.fillBottomAnimator.addCompletion { [unowned self] _ in
+            print("Filled Bottom")
+            self.fadeBottomAnimation.startAnimation()
+            self.fillLeftAnimator.startAnimation()
+            self.view.layoutIfNeeded()
+        }
+        
+        self.fadeBottomAnimation.addCompletion { [unowned self] _ in
+            print("Faded bottom")
+            self.fillBottomBarWidthConstraint.constant = 0
+            self.rightBarView.backgroundColor = .systemTeal
+            self.view.layoutIfNeeded()
+        }
+        
+        self.fillLeftAnimator.addCompletion { [unowned self] _ in
+            print("Filled Left")
+            self.fadeLeftAnimation.startAnimation()
+            self.fillTopAnimator.startAnimation()
+            print("started top")
+            self.view.layoutIfNeeded()
+        }
+        
+        self.fadeLeftAnimation.addCompletion { [unowned self] _ in
+            print("Faded left")
+            self.fillLeftBarWidthConstraint.constant = 0
+            self.leftBarView.backgroundColor = .systemTeal
+            self.view.layoutIfNeeded()
+        }
+        
+        
+        
+        self.fillTopAnimator.startAnimation()
+        
+        
+        
+        
 
-        let bars = [topBarView, rightBarView, bottomBarView, leftBarView]
 
-        newbox(bars: bars, fill: fill, index: 0, fillDur: 4, fadeDur: 1)
         
     }
     
